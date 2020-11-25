@@ -13,7 +13,7 @@ public class Exam1931 {
 
         int n = Integer.parseInt(br.readLine());
 
-        meetingArr = new int[n][2]; // meeting[i]에서 i는 회의 시작시간, meeting[i][0]은 소요시간, meeting[i][1]은 회의수
+        meetingArr = new int[n][2]; // meeting[i][0]은 회의 시작시간, meeting[i][1]은 회의 종료시간
 
         for(int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -26,7 +26,7 @@ public class Exam1931 {
         // 끝나는 시간을 오름차순으로 정렬
         Arrays.sort(meetingArr, new Comparator<int[]>() {
             @Override
-            public int compare(int[] start, int[] end) {
+            public int compare(int[] start, int[] end) { // start[] 는 mettingArr[][]의 행 데이터를 담고 있음
                 if(start[1] == end[1]){
                     // 종료 시간이 같을경우엔 시작시간으로 정렬
                     return Integer.compare(start[0], end[0]);

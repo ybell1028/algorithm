@@ -15,6 +15,9 @@ public class Exam1562 {
 
         N = Integer.parseInt(br.readLine());
 
+        /* dp[i][j][k]
+        dp[2][3][28] = 2자리 숫자 중, 마지막이 3으로 끝나면서,
+        0000011100(= 28)에 마킹된 숫자들을 사용한 계단의 개수 => (23, 43) => 2개 */
         dp = new int[101][10][1 << 10];
 
         for(int i = 1; i < 10; i++){
@@ -36,6 +39,7 @@ public class Exam1562 {
         if(dp[idx][num][bit] == 1) return dp[idx][num][bit];
 
         //높이가 n 일 때, 모든 숫자를 사용했으면 (1023) 1로 값을 넣어주고, 아니면 0을 넣는다.
+        //이를 비트 마스킹이라고 한다.
         if(idx == N) return bit == (1 << 10) - 1 ? 1 : 0;
 
         int res = 0;
