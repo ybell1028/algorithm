@@ -1,56 +1,64 @@
 package DP;
 
 import java.io.*;
-import java.util.ArrayList;
 
 public class Exam1562 {
     public static final int MOD = 1000000000;
     public static int dp[][][];
-    public static long number = 0;
     public static int N, ANS;
-
+    public static int VISIT = 1 << 10;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        N = Integer.parseInt(br.readLine());
-
         /* dp[i][j][k]
         dp[2][3][28] = 2자리 숫자 중, 마지막이 3으로 끝나면서,
         0000011100(= 28)에 마킹된 숫자들을 사용한 계단의 개수 => (23, 43) => 2개 */
-        dp = new int[101][10][1 << 10];
+        dp = new int[101][10][VISIT];
 
-        for(int i = 1; i < 10; i++){
-            ANS += dfs(1, i, 1 << i);
-            ANS %= MOD;
-        }
+        N = Integer.parseInt(br.readLine());
 
-        bw.write(String.valueOf(ANS) + "\n");
+        bw.write(String.valueOf(calc()) + "\n");
         bw.flush();
 
         br.close();
         bw.close();
     }
 
-    public static int dfs(int idx, int num, int bit){
-        number++;
-        //idx = 높이 num = 자릿수 bit = 수가 사용되었는지
-        //해당 위치에서 이전에 구해 놓은 값이 있으면 바로 사용한다.
-        if(dp[idx][num][bit] == 1) return dp[idx][num][bit];
-
-        //높이가 n 일 때, 모든 숫자를 사용했으면 (1023) 1로 값을 넣어주고, 아니면 0을 넣는다.
+    public static long calc(){
+        long sum = 0;
+        int i, j , k, bit;
+        //i = 자릿수 j = 마지막에 끝나는 수 k = 마킹된 숫자들
+        //자릿수가 n 일 때, 모든 숫자를 사용했으면 (1023) 1로 값을 넣어주고, 아니면 0을 넣는다.
         //이를 비트 마스킹이라고 한다.
-        if(idx == N) return bit == (1 << 10) - 1 ? 1 : 0;
 
-        int res = 0;
+        for(i = 1; i < 10; i++)
+            //한 자릿수, 마지막 끝나는 수 = i,
+            // 반복문을 돌면서 0000000010 (1) => 0000000100 (2) => 0000001000 (3) => ...을 체크
+            dp[1][i][1 << i] = 1;
 
-        //현재 높이에서 자리수를 확인하고 다음 단계로 넘어간다.
-        if(num + 1 < 10) // 9까지만 허용
-            res += dfs(idx + 1, num + 1, bit | 1 << (num + 1));
-        if(num - 1 >= 0) // 0까지만 허용
-            res += dfs(idx + 1, num - 1, bit | 1 << (num - 1));
+        //i = 자릿수 j = 마지막에 끝나는 수 k = 마킹된 숫자들
+        for(i = 2; i <= N; i++){
+            for(j = 0; j <= 9; j++){
+                for(k = 0; k < VISIT; k++){
+                    bit = k | (1 << j); // k는 1(실제 0), 2(싧제 1), 4(실제 2), 8...와 비트로 비교된다
 
-        //현재 위치의 값을 구했으면, 메모리에 넣고 함수로 리턴해줘서 다른 재귀함수에서 사용할 수 있게 한다.
-        return dp[idx][num][bit] = res %= MOD;
+                    // 현재 숫자의 길이 N
+                    // 즉 N-1길이의 숫자 + 숫자 a (마킹상태 k)
+
+                    //N-1 자리 숫자중, a-1로 끝나면서 k 상태인 계단수의 개수
+                    int zero = 0 < j ? dp[i-1][j-1][k] : 0;
+                    //N-1 자리 숫자중, a+1로 끝나면서 k 상태인 계단수의 개수
+                    int nine = j < 9 ? dp[i-1][j+1][k] : 0;
+
+                    dp[i][j][bit] = (dp[i][j][bit] + (zero + nine) % MOD) % MOD;
+                }
+            }
+        }
+
+        for (i = 0; i < 10; i++){
+            sum = (sum + dp[N][i][VISIT - 1]) % MOD;
+        }
+        return sum;
     }
 }
