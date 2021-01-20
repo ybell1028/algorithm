@@ -1,17 +1,27 @@
 package SamsungTest;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
+
+class XY{
+    public int x;
+    public int y;
+    XY(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+}
 
 public class Exam3190 {
     public static int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}}; // 시계방향 상우하좌
 
     public static int snake() {
-        int tRow, tCol; // 임시 위치
-        int sec = 1; // 초
+        Queue<XY> queue = new LinkedList<>();
+        int sec = 0; // 초
         int cIdx = 0; // 방향전환 인덱스
         int dIdx = 1; // 방향 인덱스, 처음엔 오른쪽으로
-        board[sRow][sCol] = 2; // 시작은 왼쪽 최상단
         while (true) {
             if (cIdx < l && sec == x[cIdx]) {
                 // 1. 방향 바뀌었는지 체크
@@ -24,20 +34,21 @@ public class Exam3190 {
                 }
                 cIdx++;
             }
-            // 2. 안바뀌었으면 그냥 방향대로 나아감
-            tRow = sRow + dir[dIdx][0];
-            tCol = sCol + dir[dIdx][1];
+            queue.add(new XY(sXY.x, sXY.y)); // 기존에 머리 이동 -> 뒤엔 꼬리 부분을 큐에 추가
+            sXY.x += dir[dIdx][0];
+            sXY.y += dir[dIdx][1];
             sec++;
             //3. 나가 가려는 방향이 레인지 벗어났는지 체크
-            if (tRow < 0 || tRow >= n || tCol < 0 || tCol >= n) break;
-            else if(board[tRow][tCol] == 2) break; // 자기 몸에 부딛힘
-            else if(board[tRow][tCol] == 0) { // 앞에 사과가 없다면
-                board[sRow][sCol] = 0; // 꼬리 빠져 나옴
-                // 사과가 없다면 꼬리 그대로 두고
+            if (sXY.x < 0 || sXY.x >= n || sXY.y < 0 || sXY.y >= n) break;
+            else if(board[sXY.x][sXY.y] == 2) break; // 4. 자기 몸에 부딛힘
+            else if(board[sXY.x][sXY.y] == 0) { //5. 앞에 사과가 없다면
+                // 큐에서 poll함으로써 꼬리 빠져 나옴
+                if(!queue.isEmpty()){
+                    XY dXY = queue.poll();
+                    board[dXY.x][dXY.y] = 0; // 빠진 꼬리를 board에 기록
+                }
             }
-            sRow = tRow;
-            sCol = tCol;
-            board[sRow][sCol] = 2; // 머리 이동
+            board[sXY.x][sXY.y] = 2; // 머리부분을 board에 기록
         }
         return sec;
     }
@@ -49,8 +60,7 @@ public class Exam3190 {
     public static int[][] board;
     public static int[] x;
     public static char[] c;
-    public static int sRow = 0; // 뱀이 있는 행
-    public static int sCol = 0; // 뱀이 있는 열
+    public static XY sXY = new XY(0, 0);
     public static int n, l;
 
     public static void main(String[] args) throws IOException {
@@ -83,6 +93,7 @@ public class Exam3190 {
             c[i] = st.nextToken().charAt(0); // L이면 왼쪽으로 90도 전환, D면 오른쪽으로 90도 전환
         }
 
+        board[sXY.x][sXY.y] = 2; // 시작은 왼쪽 최상단
         System.out.println(snake());
     }
 }
