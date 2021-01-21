@@ -5,16 +5,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class XY{
-    public int x;
-    public int y;
-    XY(int x, int y){
-        this.x = x;
-        this.y = y;
-    }
-}
-
 public class Exam3190 {
+    public static class XY{
+        public int x;
+        public int y;
+        XY(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     public static int[][] dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}}; // 시계방향 상우하좌
 
     public static int snake() {
@@ -34,12 +34,12 @@ public class Exam3190 {
                 }
                 cIdx++;
             }
+            sec++;
             queue.add(new XY(sXY.x, sXY.y)); // 기존에 머리 이동 -> 뒤엔 꼬리 부분을 큐에 추가
             sXY.x += dir[dIdx][0];
             sXY.y += dir[dIdx][1];
-            sec++;
             //3. 나가 가려는 방향이 레인지 벗어났는지 체크
-            if (sXY.x < 0 || sXY.x >= n || sXY.y < 0 || sXY.y >= n) break;
+            if (sXY.x < 1 || sXY.x > n || sXY.y < 1 || sXY.y > n) break;
             else if(board[sXY.x][sXY.y] == 2) break; // 4. 자기 몸에 부딛힘
             else if(board[sXY.x][sXY.y] == 0) { //5. 앞에 사과가 없다면
                 // 큐에서 poll함으로써 꼬리 빠져 나옴
@@ -53,14 +53,10 @@ public class Exam3190 {
         return sec;
     }
 
-    public static void changeDir(int dIdx, char c) {
-
-    }
-
     public static int[][] board;
     public static int[] x;
     public static char[] c;
-    public static XY sXY = new XY(0, 0);
+    public static XY sXY = new XY(1, 1);
     public static int n, l;
 
     public static void main(String[] args) throws IOException {
@@ -71,7 +67,7 @@ public class Exam3190 {
         int k = Integer.parseInt(br.readLine()); // 사과의 갯수
         //맨 위 맨 좌측 (1행 1열) 에는 사과가 없다.
 
-        board = new int[n][n];
+        board = new int[n + 1][n + 1];
 
         StringTokenizer st;
 
