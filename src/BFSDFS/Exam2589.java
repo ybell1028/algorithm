@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 
 public class Exam2589 {
     public static char[][] map;
-    public static int[][] dst;
     public static int r, c;
 
     public static class YX{
@@ -24,16 +23,14 @@ public class Exam2589 {
 
     public static int dir[][] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    public static void BFS(YX yx){
+    public static int BFS(YX yx){
         boolean[][] visited = new boolean[r][c];
-        int[][] step = new int[r][c]; // 나아갈 수 있는 방향의 수
+        int[][] step = new int[r][c];
         Queue<YX> queue = new LinkedList<>();
-
+        int max = 0;
         queue.add(yx);
         visited[yx.y][yx.x] = true;
-        int far = 0;
         while(!queue.isEmpty()){
-            int cnt = 0;
             YX temp = queue.poll();
             for(int dirs[]: dir){
                 int ny = temp.y + dirs[0];
@@ -42,17 +39,12 @@ public class Exam2589 {
                 if(visited[ny][nx] != true && map[ny][nx] == 'L'){
                     queue.add(new YX(ny, nx));
                     visited[ny][nx] = true;
-                    cnt++;
-                }
-            }
-            far++;
-            if(cnt == 0) { // 더이상 나아갈 길이 없음
-                if(dst[r][c] < far){
-                    dst[r][c] = far;
-                    far = 0;
+                    step[ny][nx] = step[temp.y][temp.x] + 1;
+                    max = Math.max(max, step[ny][nx]);
                 }
             }
         }
+        return max;
     }
 
     public static void main(String[] args) throws IOException {
@@ -69,10 +61,7 @@ public class Exam2589 {
         //BFS에서 최고값이 나오는걸 고르는걸까?
         // 보물이 묻혀있는 곳 최대 50 * 49 = 2450 가지 경우의 수
 
-        //dst[시작지점][시작지점] = 시작지점에서 갈 수 있는 가장 먼 곳의 거리
-
         map = new char[r + 1][c + 1];
-        dst = new int[r + 1][c + 1];
 
         for(int i = 0; i < r; ++i){
             String s = br.readLine();
@@ -81,12 +70,18 @@ public class Exam2589 {
             }
         }
 
+        int max = 0;
+
         for(int i = 0; i < r; ++i){
             for(int j = 0; j < c; ++j){
                 if(map[i][j] == 'L'){
-                    BFS(new YX(i, j));
+                    int temp = BFS(new YX(i, j));
+                    if(temp > max){
+                        max = temp;
+                    }
                 }
             }
         }
+        System.out.println(max);
     }
 }
