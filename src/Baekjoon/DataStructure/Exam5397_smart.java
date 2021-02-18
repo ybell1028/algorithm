@@ -1,4 +1,4 @@
-package Test;
+package Baekjoon.DataStructure;
 
 import java.io.*;
 import java.util.Stack;

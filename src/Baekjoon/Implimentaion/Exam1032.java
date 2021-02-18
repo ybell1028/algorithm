@@ -1,5 +1,5 @@
 //9분 48초
-package Test;
+package Baekjoon.Implimentaion;
 
 import java.io.*;
 

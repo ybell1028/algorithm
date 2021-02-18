@@ -1,4 +1,4 @@
-package Test;
+package Baekjoon.Greedy;
 
 import java.io.*;
 import java.util.StringTokenizer;

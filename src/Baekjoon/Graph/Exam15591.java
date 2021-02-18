@@ -1,4 +1,4 @@
-package Test;
+package Baekjoon.Graph;
 
 import java.io.*;
 import java.util.ArrayList;
