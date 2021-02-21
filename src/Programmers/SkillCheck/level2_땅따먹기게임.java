@@ -1,7 +1,7 @@
 package Programmers.SkillCheck;
 //소요시간 : 50분
 
-public class 땅따먹기게임 {
+public class level2_땅따먹기게임 {
         static class Solution {
             int solution(int[][] land) {
                 int answer = 0;
