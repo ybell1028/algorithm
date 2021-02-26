@@ -1,4 +1,4 @@
-package Practice;
+package Baekjoon.Practice;
 
 import java.text.DecimalFormat;
 

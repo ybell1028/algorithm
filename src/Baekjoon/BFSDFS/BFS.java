@@ -1,4 +1,4 @@
-package BFSDFS;
+package Baekjoon.BFSDFS;
 
 //시작 정점으로부터 가까운 정점을 먼저 방문하고 멀리 떨어져 있는 정점을 나중에 방문하는 순회 방법이다.
 //즉, 깊게(deep) 탐색하기 전에 넓게(wide) 탐색하는 것이다.
@@ -20,53 +20,53 @@ package BFSDFS;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-class Graph {
-    private int V; // 노드의 개수
-    private LinkedList<Integer> adj[]; // 인접 리스트
+public class BFS {
+    static class Graph {
+        private int V; // 노드의 개수
+        private LinkedList<Integer> adj[]; // 인접 리스트
 
-    /** 생성자 */
-    Graph(int v) {
-        V = v;
-        adj = new LinkedList[v];
-        for (int i = 0; i < v; ++i) // 인접 리스트 초기화
-            adj[i] = new LinkedList();
-    }
+        /** 생성자 */
+        Graph(int v) {
+            V = v;
+            adj = new LinkedList[v];
+            for (int i = 0; i < v; ++i) // 인접 리스트 초기화
+                adj[i] = new LinkedList();
+        }
 
-    /** 노드를 연결 v->w */
-    void addEdge(int v, int w) { adj[v].add(w); }
+        /** 노드를 연결 v->w */
+        void addEdge(int v, int w) { adj[v].add(w); }
 
-    /** s를 시작 노드로 한 BFS로 탐색하면서 탐색한 노드들을 출력 */
-    void BFS(int s) {
-        // 노드의 방문 여부 판단 (초깃값: false)
-        boolean visited[] = new boolean[V];
-        // BFS 구현을 위한 큐(Queue) 생성
-        LinkedList<Integer> queue = new LinkedList<Integer>();
+        /** s를 시작 노드로 한 BFS로 탐색하면서 탐색한 노드들을 출력 */
+        void BFS(int s) {
+            // 노드의 방문 여부 판단 (초깃값: false)
+            boolean visited[] = new boolean[V];
+            // BFS 구현을 위한 큐(Queue) 생성
+            LinkedList<Integer> queue = new LinkedList<Integer>();
 
-        // 현재 노드를 방문한 것으로 표시하고 큐에 삽입(enqueue)
-        visited[s] = true;
-        queue.add(s);
+            // 현재 노드를 방문한 것으로 표시하고 큐에 삽입(enqueue)
+            visited[s] = true;
+            queue.add(s);
 
-        // 큐(Queue)가 빌 때까지 반복
-        while (queue.size() != 0) {
-            // 방문한 노드를 큐에서 추출(dequeue)하고 값을 출력
-            s = queue.poll();
-            System.out.print(s + " ");
+            // 큐(Queue)가 빌 때까지 반복
+            while (queue.size() != 0) {
+                // 방문한 노드를 큐에서 추출(dequeue)하고 값을 출력
+                s = queue.poll();
+                System.out.print(s + " ");
 
-            // 방문한 노드와 인접한 모든 노드를 가져온다.
-            Iterator<Integer> i = adj[s].listIterator();
-            while (i.hasNext()) {
-                int n = i.next();
-                // 방문하지 않은 노드면 방문한 것으로 표시하고 큐에 삽입(enqueue)
-                if (!visited[n]) { // 방문했던 곳은 queue에 담지 않는다
-                    visited[n] = true;
-                    queue.add(n);
+                // 방문한 노드와 인접한 모든 노드를 가져온다.
+                Iterator<Integer> i = adj[s].listIterator();
+                while (i.hasNext()) {
+                    int n = i.next();
+                    // 방문하지 않은 노드면 방문한 것으로 표시하고 큐에 삽입(enqueue)
+                    if (!visited[n]) { // 방문했던 곳은 queue에 담지 않는다
+                        visited[n] = true;
+                        queue.add(n);
+                    }
                 }
             }
         }
     }
-}
 
-public class BFS {
     public static void main(String[] args) {
         Graph g = new Graph(5);
 

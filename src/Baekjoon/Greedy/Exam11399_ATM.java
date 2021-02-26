@@ -1,10 +1,10 @@
-package Greedy;
+package Baekjoon.Greedy;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Exam11399 { // 앞에 시간이 소요되는 만큼 뒤에도 같이 대기해야함
+public class Exam11399_ATM { // 앞에 시간이 소요되는 만큼 뒤에도 같이 대기해야함
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
