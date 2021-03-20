@@ -16,12 +16,10 @@ public class Exam9020_골드바흐의추측 {
 
         notPrime[1] = true;
 
-        for(int i = 2; i <= 10000; ++i){
-            for(int j = 2; j <= Math.sqrt(i); ++j){
-                if(i % j == 0){
-                    notPrime[i] = true;
-                    break;
-                }
+        for(int i = 2; i <= Math.sqrt(10000); ++i){
+            if(notPrime[i]) continue;
+            for(int j = i + i; j <= 10000; j+=i){
+                notPrime[j] = true;
             }
         }
 
