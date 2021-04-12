@@ -25,6 +25,7 @@ public class Exam2805_나무자르기 {
         long end = tm.lastKey();
         long sum;
         long H;
+        long height = 0;
         while (start <= end) {
             sum = 0;
             H = (start + end) / 2;
@@ -33,13 +34,14 @@ public class Exam2805_나무자르기 {
                     sum += (Integer) entry.getValue() * ((Integer) entry.getKey() - H);
             }
             if (sum >= M) {
+                height = H;
                 start = H + 1;
             } else {
                 end = H - 1;
             }
         }
 
-        System.out.println(end);
+        System.out.println(height);
 
         br.close();
     }
