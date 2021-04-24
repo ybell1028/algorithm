@@ -14,13 +14,14 @@ public class 더맵게 {
 
             int newSco;
             int mixedSco;
-            while (mh.list.size() >= 3) {
+            while (mh.list.get(1) < K && mh.list.size() >= 3) {
                 newSco = mh.delete();
                 mixedSco = mh.delete();
                 mh.push(newSco + mixedSco * 2);
-                if (mh.list.size() <= 1 || mh.list.get(1) >= K) break;
                 answer++;
             }
+
+            if(mh.list.size() == 2 && mh.list.get(1) < K) answer++;
 
             if(answer >= scoville.length) return -1;
             else return answer;
@@ -56,8 +57,8 @@ public class 더맵게 {
                 list.set(1, list.remove(list.size() - 1));
 
                 while (p * 2 <= list.size() - 1) {  // 자기보다 작은게 있으면 교환
-                    if (p * 2 + 1 <= list.size() - 1) {
-                        if (list.get(p) > list.get(p * 2 + 1) && list.get(p * 2) > list.get(p * 2 + 1)) {
+                    if (p * 2 + 1 <= list.size() - 1 && list.get(p * 2) > list.get(p * 2 + 1)) {
+                        if (list.get(p) > list.get(p * 2 + 1)) {
                             swap(p, p * 2 + 1);
                             p = p * 2 + 1;
                         } else break;
