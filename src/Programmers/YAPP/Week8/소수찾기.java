@@ -1,20 +1,14 @@
 package Programmers.YAPP.Week8;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class 소수찾기 {
     static class Solution {
-        static List<String> list = new ArrayList<>();
         static final int LEN = 10000000;
         static boolean[] isPrime;
-        static boolean[] check;
         static int prime = 0;
         public int solution(String numbers) {
             isPrime = new boolean[LEN + 1];
-            check = new boolean[LEN + 1];
             Arrays.fill(isPrime, true);
             isPrime[0] = false;
             isPrime[1] = false;
@@ -24,48 +18,42 @@ public class 소수찾기 {
                     isPrime[j] = false;
                 }
             }
+            List<String> list = new ArrayList<>(Arrays.asList(numbers.split("")));
+            Set<Integer> set = new HashSet<>();
 
-            boolean[] visited = new boolean[numbers.length()];
-            for(int i = 0; i < numbers.length(); ++i){
-                list.add(numbers.substring(i, i + 1));
+            for(int i =0; i < list.size(); ++i){
+                Collections.sort(list);
+                String current = list.remove(i);
+                permutaion(set, list, current);
+                list.add(current);
             }
-            int len = 0;
-            while(len <= numbers.length()){
-                for(int i = 1; i <= numbers.length(); ++i){
-                    combi(visited, 0, numbers.length(), i);
-                }
-                list.add(list.remove(0)); // 앞에 빼고 뒤에 다시 넣어주기
-                len++;
+
+            for(int val : set){
+                if(isPrime[val]) prime++;
             }
             return prime;
         }
 
-        public static void combi(boolean[] visited, int start, int n, int r){
-            if(r == 0){
-                StringBuilder sb = new StringBuilder();
-                for(int i = 0; i < visited.length; ++i){
-                    if(visited[i]) sb.append(list.get(i));
-                }
-                int num = Integer.parseInt(sb.toString());
-                if(!check[num]) {
-                    if(isPrime[num]) {
-                        System.out.println(num);
-                        prime++;
-                    }
-                    check[num] = true;
-                }
-            } else {
-                for (int i = start; i < n; ++i) {
-                    visited[i] = true;
-                    combi(visited, i + 1, n, r - 1);
-                    visited[i] = false;
-                }
+        public static void permutaion(Set<Integer> set, List<String> list, String current){
+            //set - 조합의 결과를 담는 Set
+            //list - 현재 턴에서 남은 요소들
+            //current - 현재 진행된 요소의 조합
+            
+            //다음거 추가하지 않는 경우
+            set.add(Integer.parseInt(current));
+            if(list.size() == 0) return;;
+
+            //다음 거 추가하는 경우
+            for(int i = 0; i < list.size(); ++i){
+                String next = list.remove(0);
+                permutaion(set, list, current + next);
+                list.add(next);
             }
         }
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.solution("123455"));
+        System.out.println(s.solution("51234"));
     }
 }
