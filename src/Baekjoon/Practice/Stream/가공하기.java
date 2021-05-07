@@ -15,7 +15,7 @@ public class 가공하기 {
                         .filter(name -> name.startsWith("E"));
         System.out.println("간단한 필터링");
         stream1.forEach(s -> System.out.print(s + " "));
-        System.out.println();
+        System.out.println("\n");
 
         //Mapping
         Stream<String> stream2 =
@@ -67,10 +67,9 @@ public class 가공하기 {
                                 student.getMath())) // 학생마다 점수로 IntStream 생성
                 .average().ifPresent(avg -> // 평균내기
                 System.out.println(Math.round(avg * 10)/10.0));
-        System.out.println();
+        System.out.println("\n");
 
         //Sorting
-
         List<Integer> integerList = IntStream.of(14, 11, 20, 39, 23)
                 .sorted() //인자없이 그냥 호출할 경우 오름차순으로 정렬
                 .boxed()
@@ -88,7 +87,7 @@ public class 가공하기 {
                 .sorted()
                 .collect(Collectors.toList())
                 .forEach(s -> System.out.print(s + " "));
-        System.out.println();
+        System.out.println("\n");
         // [Go, Groovy, Java, Python, Scala, Swift]
 
         lang.stream()
@@ -104,7 +103,7 @@ public class 가공하기 {
                 .sorted(Comparator.comparingInt(String::length))
                 .collect(Collectors.toList())
                 .forEach(s -> System.out.print(s + " "));
-        System.out.println();
+        System.out.println("\n");
         // [Go, Java, Scala, Swift, Groovy, Python]
 
         lang.stream()
