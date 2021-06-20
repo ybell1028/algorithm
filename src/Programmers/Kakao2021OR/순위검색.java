@@ -7,6 +7,7 @@ public class 순위검색 {
         // 참고 : https://girawhale.tistory.com/94
         public int[] solution(String[] info, String[] query) {
             Map<String, List<Integer>> infos = new HashMap<>();
+            LinkedList<String> linked = new LinkedList<>();
             for (String in : info) {
                 String[] split = in.split(" ");
                 int score = Integer.parseInt(split[4]);
@@ -22,6 +23,7 @@ public class 순위검색 {
                     //만들어진 key를 infos에 넣어야 하는데 만약 새로운 key가 나와 기존에 값이 없다면 Null Exception이 발생하게 된다.
                     // 따라서 computeIfAbsent() 메서드를 활용해 value가 없다면 new ArrayList<>()를 생성해주고 List에 점수를 넣어주었다.
                     infos.computeIfAbsent(key.toString(), s -> new ArrayList<>()).add(score);
+                    linked.add(key.toString());
                 }
             }
 

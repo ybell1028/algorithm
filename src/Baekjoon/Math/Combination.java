@@ -1,11 +1,13 @@
+package Baekjoon.Math;
+
 import java.util.*;
 
 public class Combination {
     public static void main(String[] args) {
         Combination ex = new Combination();
-        int[] arr = {1, 2, 3, 4};
+        int[] arr = {1, 2, 3, 4, 5};
         int n = arr.length;
-        int r = 2;
+        int r = 3;
         int[] combArr = new int[n];
 
         ex.doCombination(combArr, n, r, 0, 0, arr);
