@@ -7,7 +7,7 @@ public class 수식최대화 {
     static class Solution {
         LinkedList<Long> numberList;
         LinkedList<String> operationList;
-        boolean[] operExist = new boolean[3]; // + 0 - 1 * 2
+        boolean[] operExist = new boolean[3];
         String[] operators = {"+", "-", "*"};
         PriorityQueue<Long> pq = new PriorityQueue<>(Collections.reverseOrder());
         String ex;
@@ -17,12 +17,12 @@ public class 수식최대화 {
             ex = expression;
             for (int i = 0; i < operators.length; ++i) {
                 if (expression.contains(operators[i])) {
-                    cnt++;
                     operExist[i] = true;
+                    cnt++;
                 }
             }
 
-            permutation(new LinkedList<Integer>(), new boolean[3], 3, cnt);
+            permutation(new LinkedList<>(), new boolean[3], 3, cnt);
 
             return pq.poll();
         }
@@ -44,11 +44,11 @@ public class 수식최대화 {
                             .split(""));
         }
 
-        public void permutation(LinkedList<Integer> operList, boolean[] visited, int n, int r) {
-            if (operList.size() == r) {
+        public void permutation(LinkedList<Integer> list, boolean[] visited, int n, int r) {
+            if (list.size() == r) {
                 numberList = new LinkedList<>(seperateNumber(ex));
                 operationList = new LinkedList<>(seperateOperation(ex));
-                for (Integer operIdx : operList) {
+                for (Integer operIdx : list) {
                     while (operationList.contains(operators[operIdx])) {
                         int numberIdx = operationList.indexOf(operators[operIdx]);
                         operationList.remove(numberIdx);
@@ -65,23 +65,18 @@ public class 수식최대화 {
                                 numberList.add(numberIdx, numberList.remove(numberIdx) * numberList.remove(numberIdx));
                                 break;
                             }
-                            default:
-                                break;
                         }
                     }
                 }
-                if (numberList.get(0) > 0) {
-                    pq.add(numberList.poll());
-                } else {
-                    pq.add(-numberList.poll());
-                }
+                if (numberList.get(0) > 0) pq.add(numberList.poll());
+                else pq.add(-numberList.poll());
             }
             for (int i = 0; i < n; ++i) {
                 if (!visited[i]) {
                     visited[i] = true;
-                    if (operExist[i]) operList.add(i);
-                    permutation(operList, visited, n, r);
-                    if(operList.contains(i)) operList.removeLast();
+                    if (operExist[i]) list.add(i);
+                    permutation(list, visited, n, r);
+                    if(list.contains(i)) list.removeLast();
                     visited[i] = false;
                 }
             }
