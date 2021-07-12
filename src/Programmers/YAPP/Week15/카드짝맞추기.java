@@ -105,17 +105,17 @@ public class 카드짝맞추기 {
             return 0;
         }
 
-        private Vertex findCard(int[][] board, int r, int c, int d) {
-            r += dr[d];
-            c += dc[d];
-            while (r >= 0 && r < LEN && c >= 0 && c < LEN) {
-                if (board[r][c] != 0) {
-                    return new Vertex(r, c);
+        private Vertex findCard(int[][] board, int row, int col, int d) {
+            row += dr[d];
+            col += dc[d];
+            while (row >= 0 && row < LEN && col >= 0 && col < LEN) {
+                if (board[row][col] != 0) {
+                    return new Vertex(row, col);
                 }
-                r += dr[d];
-                c += dc[d];
+                row += dr[d];
+                col += dc[d];
             }
-            return new Vertex(r - dr[d], c - dc[d]);
+            return new Vertex(row - dr[d], col - dc[d]);
         }
 
         public int[][] deepCopy(int[][] board) {
