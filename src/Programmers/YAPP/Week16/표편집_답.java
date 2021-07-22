@@ -48,4 +48,16 @@ public class 표편집_답 {
         String[] cmd5 = {"C", "C", "C", "C", "C", "Z", "Z", "Z", "C"};
         System.out.println(s.solution(8, 2, cmd2));
     }
+
+    public static class Singleton {
+        private Singleton() {};
+
+        public static class SingletonHelper{
+            private static final Singleton INSTANCE = new Singleton();
+        }
+
+        public static Singleton getInstance(){
+            return SingletonHelper.INSTANCE;
+        }
+    }
 }
