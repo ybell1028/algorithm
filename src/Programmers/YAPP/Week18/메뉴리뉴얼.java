@@ -10,8 +10,6 @@ public class 메뉴리뉴얼 {
         public String[] solution(String[] orders, int[] course) {
             Arrays.sort(orders);
 
-            int max = course[course.length - 1];
-
             Map<String, Integer> hm[] = new HashMap[MAX];
             for(int i = 0; i < MAX; ++i){
                 hm[i] = new HashMap<>();
