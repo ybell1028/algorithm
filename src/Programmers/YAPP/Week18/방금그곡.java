@@ -18,13 +18,17 @@ public class 방금그곡 {
             @Override
             public int compareTo(Object obj) {
                 Music music = (Music) obj;
+                //재생 시간이 다르다면 재생 시간이 긴 음악 정보을 우선
                 if (this.time != music.time) return this.time - music.time;
+                //재생 시간이 같다면 먼저 들어온 음악 정보를 우선
                 else return music.order - this.order;
             }
         }
 
         public String solution(String m, String[] musicinfos) {
+            //조건과 일치하며 '우선순위가 가장 높은 하나의 음악 제목'만 반환하면 되니 내림차순 우선순위 큐를 사용
             PriorityQueue<Music> pq = new PriorityQueue<>(Collections.reverseOrder());
+            //콤마를 기준으로 멜로디를 나눠주는 seperate 함수로 네오가 기억한 멜로디를 담은 문자열 m을 재구성 해줍니다.
             String seperatedM = seperate(m);
             int order = 1;
 
@@ -37,6 +41,7 @@ public class 방금그곡 {
                 int minute;
                 int sMinute = Integer.parseInt(start[1]);
                 int eMinute = Integer.parseInt(end[1]);
+                // 시작 시간보다 종료 시간의 분이 더 큰 케이스
                 if (sMinute > eMinute) {
                     minute = (60 - sMinute) + eMinute;
                     hour--;
@@ -44,22 +49,25 @@ public class 방금그곡 {
                     minute = eMinute - sMinute;
                 }
 
-                int time = hour * 60 + minute;
-                int len = calcLen(info[3], info[3].length()); // len은 악보 정보의 시간 길이
+                String seperatedInfo = seperate(info[3]);
+                int len = seperatedInfo.split(",").length; // len은 주어진 악보의 총 길이
+                int time = hour * 60 + minute; // 총 소요 시간 계산
 
                 String result;
                 if (time > len) {
-                    String seperatedInfo = seperate(info[3]);
+                    //악보 길이보다 재생 시간이 길면
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < time / len; ++i) {
                         sb.append(seperatedInfo);
                     }
-                    sb.append(seperate(cutCode(info[3], time % len)));
+                    sb.append(cutCode(seperatedInfo, time % len));
                     result = sb.toString();
                 } else {
+                    //악보 길이보다 재생 시간이 짧으면
                     result = seperate(info[3].substring(0, time + (info[3].length() - len)));
                 }
                 if (result.contains(seperatedM)) {
+                    //재생시간에 맞춰 재구성한 악보에 네오가 기억한 멜로디가 포함 되어있다면 Music 인스턴스를 생성해 pq에 삽입
                     pq.add(new Music(info[2], time, order++));
                 }
             }
@@ -69,31 +77,21 @@ public class 방금그곡 {
             return answer.title;
         }
 
-        public int calcLen(String code, int bound) {
-            int cnt = 0;
-            for (int i = 0; i < bound; ++i) {
-                if (code.charAt(i) == '#') continue;
-                else cnt++;
-            }
-            return cnt;
-        }
-
         public String cutCode(String code, int len) {
-            int cnt = 0;
-            for (int i = 0; i < code.length(); ++i) {
-                if (code.charAt(i) == '#') len++;
-                if (cnt == len) break;
-                cnt++;
+            //code를 len까지 끊어서 재구성 해주는 함수
+            String[] seperated = code.split(",");
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < len; ++i){
+                sb.append(seperated[i] + ",");
             }
-            return code.substring(0, cnt);
+            return sb.toString();
         }
 
         public String seperate(String code) {
+            //이어진 멜로디 문자열을 콤마를 통해 구분시켜주는 함수
             code = code.replace("", ",");
             code = code.replace(",#", "#");
-            StringBuilder sb = new StringBuilder(code);
-            sb.delete(0, 1);
-            return sb.toString();
+            return code.substring(1);
         }
     }
 
