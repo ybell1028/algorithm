@@ -139,6 +139,9 @@ public class 카드짝맞추기 {
                 //length : 복사되는 배열 요소의 수
                 System.arraycopy(perms, 0, temp, 0, n);
                 orders.add(temp); // orders.ArrayList에 순서 순열 저장
+
+                String[] str = new String[10];
+                String str1 = Arrays.toString(str);
                 return;
             }
             for (int i = 0; i < n; i++) {

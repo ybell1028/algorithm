@@ -21,10 +21,10 @@ public class 소수찾기 {
             List<String> list = new ArrayList<>(Arrays.asList(numbers.split("")));
             Set<Integer> set = new HashSet<>();
 
-            for(int i =0; i < list.size(); ++i){
+            for(int i =0; i < list.size(); ++i){ // {1,2,3,4,5}, {2,3,4,5,1} ... 돌려가며 전체 조합을 얻는다.
                 Collections.sort(list);
                 String current = list.remove(i);
-                permutaion(set, list, current);
+                combination(set, list, current);
                 list.add(current);
             }
 
@@ -34,7 +34,7 @@ public class 소수찾기 {
             return prime;
         }
 
-        public static void permutaion(Set<Integer> set, List<String> list, String current){
+        public static void combination(Set<Integer> set, List<String> list, String current){
             //set - 조합의 결과를 담는 Set
             //list - 현재 턴에서 남은 요소들
             //current - 현재 진행된 요소의 조합
@@ -46,7 +46,7 @@ public class 소수찾기 {
             //다음 거 추가하는 경우
             for(int i = 0; i < list.size(); ++i){
                 String next = list.remove(0);
-                permutaion(set, list, current + next);
+                combination(set, list, current + next);
                 list.add(next);
             }
         }
