@@ -8,7 +8,6 @@ public class 셔틀버스2 {
     static class Solution {
         public String solution(int n, int t, int m, String[] timetable) {
             String answer = "";
-
             Map<String, Long> map = Arrays.stream(timetable)
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
@@ -16,50 +15,41 @@ public class 셔틀버스2 {
 
             Collections.sort(sorted, Map.Entry.comparingByKey());
 
-            System.out.println(sorted);
-
             int idx = 0;
-            int cnt = 0; // 무지성으로 올라가는 카운트가 필요함
-            for(int i = 0; i < n; i++){
+            for(int i = 0; i < n; i++) {
+                int ready = 0;
                 int temp = 0;
                 int time = 60 * 9 + t * i;
-                while(idx < sorted.size() && temp < m){
-                    Map.Entry<String, Long> entry = sorted.get(idx++); // 대기열이 없거나, 사람이 꽉찬다면 break;
-                    cnt++;
-                    int ready = timeToMinute(entry.getKey());
-                    if(ready <= time){
+                while (idx < sorted.size() && temp < m) { // 브포1
+                    Map.Entry<String, Long> entry = sorted.get(idx++);
+                    ready = timeToMinute(entry.getKey());
+                    if (ready <= time) {
                         temp += entry.getValue();
-                    } else {
-                        idx--;
+                    } else { // 브포 2
                         break;
                     }
                 }
 
-                if(idx > sorted.size() || temp >= m) idx--;
+                if(temp >= m || idx >= sorted.size() || ready > time) idx--;
 
-                if(temp >= m) { // 승객 최대치 넘음
-                    if(i == n - 1){ // 마지막 루프라면
-                        if(cnt == 0) { // 해당 시간에 타는 사람이 아무도 없을 때
-                            answer = minuteToTime(timeToMinute(sorted.get(idx).getKey()));
-                        }
-                        else { // 있을 때... 얼마만큼 빼야 여유가 생기는지
-                            answer = minuteToTime(timeToMinute(sorted.get(idx).getKey()) - 1); // case 3,4 -> 대기열 맨앞에 있는 같은 시각에 도착한 사람들 맨 뒤에 위치하면 탑승하지 못하므로 1분 일찍 도착
-                        }
-                        // else answer = sorted.get(idx).getKey(); // 대기열 맨앞의 시간이 아니라면 그 시간에 맨 뒤시간 바로 앞시간에 도착해야함
+                if(i == n - 1){ // 막차 시간임
+                    if(temp >= m){ // 인원 초과됨
+                        answer = minuteToTime(timeToMinute(sorted.get(idx).getKey()) - 1); // 마지막에 탑승하는 시간보다 1분 빨리 줄서기
                         break;
-                    } else { // 아직 루프가 남았다면 맵 업데이트
+                    }
+                    else { // 인원 초과되지 않음
+                        answer = minuteToTime(time); // 막차 시간에 맞춰서 줄서기
+                        break;
+                    }
+                } else {
+                    if(temp >= m){ // 인원 초과됨
                         Map.Entry<String, Long> entry = sorted.remove(idx);
-                        sorted.add(idx, new AbstractMap.SimpleEntry<String, Long>(entry.getKey(), entry.getValue() - m));
+                        //entry.getValue()보다 m이 더 크다면 음수가 되는 문제
+                        if(entry.getValue() > m) sorted.add(idx, new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue() - m)); // 리스트에서 제거한 곳에 값을 수정하여 다시 추가
                     }
                 }
-
-                if(cnt >= sorted.size()){ // 대기열을 전부 탐색함 -> 막차 시간에 맞춰가면 됨
-                    time = 60 * 9 + t * (n - 1);
-                    answer = minuteToTime(time);
-                    break;
-                }
-                cnt--;
             }
+
 
             return answer;
         }
@@ -90,7 +80,10 @@ public class 셔틀버스2 {
         String[] timetable4 = {"00:01", "00:01", "00:01", "00:01", "00:01"};
         String[] timetable5 = {"23:59"};
         String[] timetable6 = {"23:59","23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59", "23:59"};
+        String[] timetable7 = {"09:00", "09:30", "10:00", "10:59", "11:00", "23:59"}; // 3 60 2 -> 답 10:59
+        String[] timetable8 = {"00:01", "00:01", "00:02", "00:03", "00:04"}; // 2 60 2 -> 답 09:59
+        String[] timetable9 = {"03:00"};
         Solution s = new Solution();
-        s.solution(2, 1, 2, timetable3);
+        System.out.println(s.solution(1, 10, 1, timetable9)); // 9시, 9시 반, 10시
     }
 }
