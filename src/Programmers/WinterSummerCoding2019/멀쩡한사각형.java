@@ -1,5 +1,7 @@
 package Programmers.WinterSummerCoding2019;
 
+import java.util.LinkedList;
+
 public class 멀쩡한사각형 {
     class Solution {
         long big = 0;
@@ -26,6 +28,8 @@ public class 멀쩡한사각형 {
                 }
                 answer = total - removed;
             }
+            LinkedList<Integer> list = new LinkedList<>();
+            list.remove();
             return answer;
         }
 
