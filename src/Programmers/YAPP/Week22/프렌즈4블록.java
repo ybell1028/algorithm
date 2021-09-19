@@ -1,38 +1,102 @@
 package Programmers.YAPP.Week22;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class 프렌즈4블록 {
-    class Solution {
+    static class Block {
+        public int row;
+        public int col;
+        public String content;
+
+        Block(int row, int col, String content) {
+            this.row = row;
+            this.col = col;
+            this.content = content;
+        }
+    }
+
+    static class Solution {
         int M, N;
-        int[][] dirs = {{1, 0} {0, 1}, {1, 1}};
-        char[][] nBoard;
+        String[][] nBoard;
+        Stack<Block> stack;
+
         public int solution(int m, int n, String[] board) {
             M = m;
             N = n;
-            nBoard = new char[board.length][board[0].length()];
-            for(int i = 0; i < board.length; ++i){
-                nBoard[i] = board[i].toCharArray();
-            }
             int answer = 0;
+            stack = new Stack<>();
+            nBoard = new String[m][n];
+            for (int i = 0; i < m; ++i) {
+                nBoard[i] = board[i].split("");
+            }
+            while (true) {
+                for (int i = 0; i < m - 1; ++i) {
+                    for (int j = 0; j < n - 1; ++j) {
+                        if (!nBoard[i][j].equals("0")) canDelete(i, j, nBoard[i][j]);
+                    }
+                }
+                if (stack.size() == 0) break;
+                else {
+                    while (!stack.isEmpty()) {
+                        Block b = stack.pop();
+                        for (int i = b.col; i <= b.col + 1; ++i) {
+                            int cnt = 0;
+                            for (int j = b.row; j < m; ++j) {
+                                if (cnt == 2) break;
+                                else {
+                                    if (nBoard[j][i].equals(b.content)) {
+                                        cnt++;
+                                        nBoard[j][i] = "0";
+                                    }
+                                }
+                            }
+                            answer += cnt;
+                        }
+                    }
+                }
+            }
             return answer;
         }
 
-        public boolean canDelete(int r, int c){
-            if(r >= M - 1 || c >= N - 1) return false;
-            else {
-                for(int i = 0; i < dirs.length; ++i){
-                    if(nBoard[r + dirs[i][0]][c + dirs[i][1]] == 0){
-                        r++;
-                        i--;
-                        continue;
+        public void canDelete(int row, int col, String target) {
+            // 첫번째
+            int total = 0;
+            int limit1 = row + 1;
+            //하 -> 우 -> 상으로 움직임
+            for (int i = col; i <= col + 1; ++i) {
+                if(i == col){ // 우선 첫번째 루프는 처음부터 해당 타겟이 있다는게 확실하다
+                    for (int j = row; j <= limit1; ++j) {
+                            if (limit1 < M - 1 && nBoard[j][i].equals("0")) {
+                                limit1++;
+                            } else if (nBoard[j][i].equals(target)) {
+                                total++;
+                            } else break; // 다른 알파벳 나오면 나가리
                     }
-                    if(nBoard[r][c] != nBoard[r + dirs[i][0]][c + dirs[i][1]]) return false;
+                } else {
+                    if(total < 2) return;
+                    int limit2 = limit1 >= M - 1 ? M - 1 : limit1 + 1;
+                    int limit3 = limit2 - 1;
+                    if(nBoard[limit2][i].equals(target)) total++;
+                    else break;
+                    for (int j = limit2 - 1; j >= limit3 && total < 4; --j) {
+                        if (nBoard[j][i].equals(target)) {
+                            total++;
+                        } else if(limit3 > 0 && nBoard[j][i].equals("0")) limit3--;
+                        else break; // 다른 알파벳 나오면 나가리
+                    }
                 }
-                return true;
             }
+            if (total == 4) stack.add(new Block(row, col, nBoard[row][col]));  // 다 넣을 필요 없고 작은 [row][col]
         }
+    }
 
-        public void delete(char[][] nBoard){
-
-        }
+    public static void main(String[] args) {
+        String[] board0 = {"CCBDE", "AAADE", "AAABF", "CCBBF"};
+        String[] board1 = {"TTT", "TTT", "TTT"};
+        String[] board2 = {"GGPP", "GGPP", "AAGG", "GGAA"};
+        String[] board = {"TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"};
+        Solution s = new Solution();
+        System.out.println(s.solution(6, 6, board));
     }
 }
