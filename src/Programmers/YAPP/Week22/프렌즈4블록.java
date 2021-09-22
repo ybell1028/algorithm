@@ -1,7 +1,7 @@
 package Programmers.YAPP.Week22;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedList;
+import java.util.Stack;
 
 public class 프렌즈4블록 {
     static class Block {
@@ -17,77 +17,73 @@ public class 프렌즈4블록 {
     }
 
     static class Solution {
+        int answer = 0;
         int M, N;
-        String[][] nBoard;
         Stack<Block> stack;
-
+        LinkedList[] nBoard;
         public int solution(int m, int n, String[] board) {
-            M = m;
-            N = n;
-            int answer = 0;
+            M = m; // 행
+            N = n; // 열
             stack = new Stack<>();
-            nBoard = new String[m][n];
-            for (int i = 0; i < m; ++i) {
-                nBoard[i] = board[i].split("");
+            nBoard = new LinkedList[N];
+            for(int i = 0; i < N; ++i){
+                nBoard[i] = new LinkedList<String>();
             }
-            while (true) {
-                for (int i = 0; i < m - 1; ++i) {
-                    for (int j = 0; j < n - 1; ++j) {
-                        if (!nBoard[i][j].equals("0")) canDelete(i, j, nBoard[i][j]);
+
+            for(int i = 0; i < M; ++i){ // 초기화
+                String[] temp = board[i].split("");
+                for(int j = 0; j < N; ++j){
+                    nBoard[j].add(temp[j]);
+                }
+            }
+
+            // (1)
+            while(true){
+                for(int i = 0; i < N - 1; ++i){ // 열
+                    for(int j = 0; j < M - 1; ++j){ // 행
+                        String target = (String)(nBoard[i].get(j)); // i = 행, j = 열
+                        if(!target.equals("0") &&
+                                canDelete(j, i, target)) stack.push(new Block(j, i, target));
                     }
                 }
-                if (stack.size() == 0) break;
+                if(stack.isEmpty()) break;
                 else {
-                    while (!stack.isEmpty()) {
-                        Block b = stack.pop();
-                        for (int i = b.col; i <= b.col + 1; ++i) {
-                            int cnt = 0;
-                            for (int j = b.row; j < m; ++j) {
-                                if (cnt == 2) break;
-                                else {
-                                    if (nBoard[j][i].equals(b.content)) {
-                                        cnt++;
-                                        nBoard[j][i] = "0";
-                                    }
-                                }
+                    while(!stack.isEmpty()) deleteBlock(stack.pop());
+                    for(int i = 0; i < N; ++i){ // 열
+                        for(int j = 0; j < nBoard[i].size(); ++j){ // 행
+                            if(nBoard[i].get(j).equals("0")) {
+                                stack.push(new Block(j, i, (String)nBoard[i].remove(j)));
+                                j--;
                             }
-                            answer += cnt;
                         }
+                        while(!stack.isEmpty()) nBoard[i].addFirst(stack.pop().content);
                     }
                 }
             }
             return answer;
         }
 
-        public void canDelete(int row, int col, String target) {
-            // 첫번째
-            int total = 0;
-            int limit1 = row + 1;
-            //하 -> 우 -> 상으로 움직임
-            for (int i = col; i <= col + 1; ++i) {
-                if(i == col){ // 우선 첫번째 루프는 처음부터 해당 타겟이 있다는게 확실하다
-                    for (int j = row; j <= limit1; ++j) {
-                            if (limit1 < M - 1 && nBoard[j][i].equals("0")) {
-                                limit1++;
-                            } else if (nBoard[j][i].equals(target)) {
-                                total++;
-                            } else break; // 다른 알파벳 나오면 나가리
-                    }
-                } else {
-                    if(total < 2) return;
-                    int limit2 = limit1 >= M - 1 ? M - 1 : limit1 + 1;
-                    int limit3 = limit2 - 1;
-                    if(nBoard[limit2][i].equals(target)) total++;
-                    else break;
-                    for (int j = limit2 - 1; j >= limit3 && total < 4; --j) {
-                        if (nBoard[j][i].equals(target)) {
-                            total++;
-                        } else if(limit3 > 0 && nBoard[j][i].equals("0")) limit3--;
-                        else break; // 다른 알파벳 나오면 나가리
+        public boolean canDelete(int row, int col, String target) { // 삭제할 수 있는지 판단
+            for(int i = col; i <= col + 1; ++i){
+                for(int j = row; j <= row + 1; ++j){
+                    if(!nBoard[i].get(j).equals(target)) return false;
+                }
+            }
+            return true;
+        }
+
+        public void deleteBlock(Block b) {
+            int cnt = 0;
+            for(int i = b.col; i <= b.col + 1; ++i){
+                for(int j = b.row; j <= b.row + 1; ++j){
+                    if(nBoard[i].get(j).equals(b.content)) {
+                        nBoard[i].remove(j);
+                        nBoard[i].add(j, "0");
+                        cnt++;
                     }
                 }
             }
-            if (total == 4) stack.add(new Block(row, col, nBoard[row][col]));  // 다 넣을 필요 없고 작은 [row][col]
+            answer += cnt;
         }
     }
 
