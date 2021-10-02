@@ -11,7 +11,7 @@ public class 거리두기확인하기 {
         int sCol;
         boolean[][] visited;
         String[][] room;
-        boolean violate;
+        boolean violate; // 재귀 탈출 조건
 
         public int[] solution(String[][] places) {
             int[] answer = new int[NUM];
@@ -20,12 +20,15 @@ public class 거리두기확인하기 {
             for(String[] pl : places){
                 visited = new boolean[NUM][NUM];
                 room = new String[NUM][NUM];
+                // places를 파싱하여 2차원 배열 room에 저장
                 for(int i = 0; i < pl.length; ++i){
                     room[i] = pl[i].split("");
                 }
                 violate = false;
+                // 반복문 조건에 탈출 조건을 더해줌으로써 쓸데없는 연산을 피할 수 있다
                 for(int i = 0; i < NUM && !violate; ++i){
                     for(int j = 0; j < NUM && !violate; ++j){
+                        // 응시자를 발견했다면 DFS 시작
                         if(room[i][j].equals("P")) {
                             sRow = i;
                             sCol = j;
