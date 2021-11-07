@@ -1,6 +1,4 @@
-package Programmers.DevMatching2021Winter;
-
-import java.util.*;
+package CodingTest.DevMatching2021Winter;
 
 public class Exam2 {
     static class Solution {
