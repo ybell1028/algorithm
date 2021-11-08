@@ -1,4 +1,4 @@
-package Programmers.Kakao2021Intern;
+package CodingTest.Kakao2021Intern;
 
 import java.util.ArrayList;
 import java.util.List;

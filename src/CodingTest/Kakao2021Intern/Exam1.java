@@ -1,9 +1,4 @@
-package Programmers.Kakao2021Intern;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+package CodingTest.Kakao2021Intern;
 
 public class Exam1 { // 숫자놀이
     class Solution {

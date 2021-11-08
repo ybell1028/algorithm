@@ -1,7 +1,6 @@
-package Programmers.Kakao2021Intern;
+package CodingTest.Kakao2021Intern;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
